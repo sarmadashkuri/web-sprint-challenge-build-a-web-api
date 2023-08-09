@@ -5,7 +5,6 @@ const {
 } = require('./projects-middleware');
 
 const Project = require('./projects-model');
-const Action = require('../actions/actions-model');
 
 const router = express.Router();
 
@@ -36,7 +35,7 @@ router.put('/:id', validateProjectId, (req, res, next) => {
     if (!name || !description) {
         res.status(400).json({ message: 'please fill in the required fields'});
     } else if (completed === undefined) {
-        res.status(400).json({ message: 'Please provide the completed field' });
+        res.status(400).json({ message: 'Please update completed status' });
     } else {
         Project.update(req.params.id, req.body)
         .then(updatedProject => {
@@ -63,7 +62,7 @@ router.get('/:id/actions', validateProjectId, (req, res, next) => {
         .catch(next);
 });
 
-router.use((err, req, res, next) => {
+router.use((err, req, res, next) => { // eslint-disable-line
     res.status(err.status || 500).json({
         customMessage: 'something went wrong inside projects router',
         message: err.message,
